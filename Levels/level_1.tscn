@@ -1,0 +1,145 @@
+[gd_scene load_steps=12 format=3 uid="uid://dodxpvqgpo5h3"]
+
+[ext_resource type="Texture2D" uid="uid://cqwg0yqpkr3m2" path="res://Assets/purple.png" id="1_febeu"]
+[ext_resource type="Script" path="res://Levels/level.gd" id="1_p13ps"]
+[ext_resource type="PackedScene" uid="uid://dkuxmdbmwk3g3" path="res://player.tscn" id="2_vehkd"]
+[ext_resource type="PackedScene" uid="uid://daxtyybw7mw1u" path="res://Assets/maze.tscn" id="4_av620"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1m5ex"]
+bg_color = Color(0, 0, 0, 0.807843)
+
+[sub_resource type="LabelSettings" id="LabelSettings_hss27"]
+font_size = 40
+font_color = Color(0.862745, 0.72549, 0.00392157, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1e7m1"]
+bg_color = Color(0, 0, 0, 1)
+
+[sub_resource type="Theme" id="Theme_8ilcc"]
+default_font_size = 20
+
+[sub_resource type="LabelSettings" id="LabelSettings_ph2m2"]
+font_size = 32
+
+[sub_resource type="LabelSettings" id="LabelSettings_df1qb"]
+font_size = 32
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_f4h0r"]
+size = Vector2(663.25, 196)
+
+[node name="Level1" type="Node2D"]
+script = ExtResource("1_p13ps")
+
+[node name="WinCanvas" type="CanvasLayer" parent="."]
+visible = false
+
+[node name="Panel" type="Panel" parent="WinCanvas"]
+z_index = 11
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_1m5ex")
+
+[node name="Label" type="Label" parent="WinCanvas/Panel"]
+layout_mode = 0
+offset_left = 111.0
+offset_top = 143.0
+offset_right = 1069.0
+offset_bottom = 256.0
+text = "YOU WON!!!!!!
+You are amazing, cool and extremily good looking!"
+label_settings = SubResource("LabelSettings_hss27")
+
+[node name="Panel" type="Panel" parent="WinCanvas/Panel"]
+layout_mode = 0
+offset_left = 338.0
+offset_top = 298.0
+offset_right = 767.0
+offset_bottom = 545.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_1e7m1")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="WinCanvas/Panel/Panel"]
+layout_mode = 1
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = -61.5
+offset_bottom = 54.5
+grow_horizontal = 2
+grow_vertical = 2
+theme = SubResource("Theme_8ilcc")
+
+[node name="ResetButton" type="Button" parent="WinCanvas/Panel/Panel/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Reset"
+
+[node name="QuitButton" type="Button" parent="WinCanvas/Panel/Panel/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Quit"
+
+[node name="Graphics" type="Node" parent="."]
+
+[node name="CanvasLayer" type="CanvasLayer" parent="Graphics"]
+layer = -10
+
+[node name="Background" type="TextureRect" parent="Graphics/CanvasLayer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_febeu")
+stretch_mode = 1
+
+[node name="StartLabel" type="Label" parent="Graphics"]
+z_index = 1
+offset_left = 509.0
+offset_top = 187.0
+offset_right = 586.0
+offset_bottom = 232.0
+text = "Start"
+label_settings = SubResource("LabelSettings_ph2m2")
+
+[node name="EndLabel" type="Label" parent="Graphics"]
+z_index = 2
+offset_left = 1962.0
+offset_top = 349.0
+offset_right = 2039.0
+offset_bottom = 394.0
+text = "End"
+label_settings = SubResource("LabelSettings_ph2m2")
+
+[node name="Tutorial" type="Label" parent="Graphics"]
+offset_left = 21.0
+offset_top = 8.0
+offset_right = 865.0
+offset_bottom = 197.0
+text = "Rules:
+- Go from Start to the End
+- You will go back to start if you go outside of the maze
+Good Luck!"
+label_settings = SubResource("LabelSettings_df1qb")
+
+[node name="Player" parent="." instance=ExtResource("2_vehkd")]
+z_index = 2
+position = Vector2(556, 323)
+
+[node name="Maze" parent="." instance=ExtResource("4_av620")]
+z_index = 1
+position = Vector2(523, 517)
+
+[node name="FinishArea" type="Area2D" parent="Maze"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Maze/FinishArea"]
+position = Vector2(1514.63, -154)
+shape = SubResource("RectangleShape2D_f4h0r")
+
+[connection signal="button_down" from="WinCanvas/Panel/Panel/HBoxContainer/ResetButton" to="." method="_on_reset_button_button_down"]
+[connection signal="button_down" from="WinCanvas/Panel/Panel/HBoxContainer/QuitButton" to="." method="_on_quit_button_button_down"]
+[connection signal="body_exited" from="Maze" to="." method="_on_maze_body_exited"]
+[connection signal="body_entered" from="Maze/FinishArea" to="." method="_on_finish_area_body_entered"]
